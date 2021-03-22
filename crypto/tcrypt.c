@@ -77,6 +77,7 @@ static char *check[] = {
 	"khazad", "wp512", "wp384", "wp256", "tnepres", "xeta",  "fcrypt",
 	"camellia", "seed", "salsa20", "rmd128", "rmd160", "rmd256", "rmd320",
 	"lzo", "lzo-rle", "cts", "zlib", "sha3-224", "sha3-256", "sha3-384", "sha3-512",
+        "sb256", "sb512",
 	NULL
 };
 
@@ -1918,6 +1919,14 @@ static int do_test(const char *alg, u32 type, u32 mask, int m, u32 num_mb)
 		ret += tcrypt_test("sm3");
 		break;
 
+	case 53:
+		ret += tcrypt_test("sb256");
+		break;
+
+	case 54:
+		ret += tcrypt_test("sb512");
+		break;
+
 	case 100:
 		ret += tcrypt_test("hmac(md5)");
 		break;
@@ -2411,6 +2420,15 @@ static int do_test(const char *alg, u32 type, u32 mask, int m, u32 num_mb)
 		test_hash_speed("sm3", sec, generic_hash_speed_template);
 		if (mode > 300 && mode < 400) break;
 		/* fall through */
+	case 327:
+		test_hash_speed("sb256", sec, generic_hash_speed_template);
+		if (mode > 300 && mode < 400) break;
+		/* fall through */
+	case 328:
+		test_hash_speed("sb512", sec, generic_hash_speed_template);
+		if (mode > 300 && mode < 400) break;
+		/* fall through */
+
 	case 399:
 		break;
 
@@ -2524,6 +2542,17 @@ static int do_test(const char *alg, u32 type, u32 mask, int m, u32 num_mb)
 				    num_mb);
 		if (mode > 400 && mode < 500) break;
 		/* fall through */
+ 	case 426:
+		test_mb_ahash_speed("sb256", sec, generic_hash_speed_template,
+ 				    num_mb);
+ 		if (mode > 400 && mode < 500) break;
+ 		/* fall through */
+    case 427:
+		test_mb_ahash_speed("sb512", sec, generic_hash_speed_template,
+				    num_mb);
+		if (mode > 400 && mode < 500) break;
+		/* fall through */
+
 	case 499:
 		break;
 
