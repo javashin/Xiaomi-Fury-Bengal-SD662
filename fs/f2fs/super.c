@@ -2743,6 +2743,12 @@ static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
 		}
 	}
 
+	if (le32_to_cpu(raw_super->magic) != F2FS_SUPER_MAGIC) {
+		f2fs_info(sbi, "Magic Mismatch, valid(0x%x) - read(0x%x)",
+			  F2FS_SUPER_MAGIC, le32_to_cpu(raw_super->magic));
+		return -EINVAL;
+	}
+
 	/* Currently, support only 4KB page cache size */
 	if (F2FS_BLKSIZE != PAGE_SIZE) {
 		f2fs_info(sbi, "Invalid page_cache_size (%lu), supports only 4KB",
