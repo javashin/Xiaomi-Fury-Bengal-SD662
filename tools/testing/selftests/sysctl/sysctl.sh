@@ -40,7 +40,7 @@ ALL_TESTS="$ALL_TESTS 0005:3:1"
 
 test_modprobe()
 {
-       if [ ! -d $DIR ]; then
+       if [ ! -d $SYSCTL ]; then
                echo "$0: $DIR not present" >&2
                echo "You must have the following enabled in your kernel:" >&2
                cat $TEST_DIR/config >&2
@@ -120,9 +120,9 @@ test_reqs()
 
 function load_req_mod()
 {
-	if [ ! -d $DIR ]; then
+	if [ ! -d $DIR -a ! -d $SYSCTL ]; then
 		if ! modprobe -q -n $TEST_DRIVER; then
-			echo "$0: module $TEST_DRIVER not found [SKIP]"
+			echo "$0: module $TEST_DRIVER not found and not built-in [SKIP]"
 			exit $ksft_skip
 		fi
 		modprobe $TEST_DRIVER
