@@ -1068,6 +1068,12 @@ static int wsa883x_spkr_event(struct snd_soc_dapm_widget *w,
 				WSA883X_VBAT_ADC_FLT_CTL,
 				0x0E, 0x00);
 		snd_soc_component_update_bits(component, WSA883X_PA_FSM_CTL,
+				0x01, 0x00);
+		snd_soc_component_update_bits(component, WSA883X_PA_FSM_CTL,
+				0x10, 0x00);
+		snd_soc_component_update_bits(component, WSA883X_PA_FSM_CTL,
+				0x10, 0x10);
+		snd_soc_component_update_bits(component, WSA883X_PA_FSM_CTL,
 				0x10, 0x00);
 		snd_soc_component_update_bits(wsa883x->component, WSA883X_PDM_WD_CTL,
 				0x01, 0x00);
