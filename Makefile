@@ -734,7 +734,7 @@ endif
 endif
 
 ifeq ($(cc-name),gcc)
-KCFLAGS         += -march=armv8.2-a -mcpu=cortex-a73.cortex-a53 -mtune=cortex-a73.cortex-a53
+KCFLAGS         += -mcpu=cortex-a73.cortex-a53 -mtune=cortex-a73.cortex-a53
 endif
 
 # Tell gcc to never replace conditional load with a non-conditional one
