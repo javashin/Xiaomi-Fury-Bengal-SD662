@@ -716,8 +716,14 @@ else
 KBUILD_CFLAGS   += -O3
 endif
 
-ifeq ($(cc-name),clang)
-KBUILD_CFLAGS += -march=armv8.2-a -mtune=kryo -mcpu=kryo
+# Tell compiler to tune the performance of the code for a specified
+# target processor
+ifeq ($(cc-name),gcc)
+KBUILD_CFLAGS += -mcpu=cortex-a73.cortex-a53 -mtune=cortex-a73.cortex-a53
+KBUILD_AFLAGS += -mcpu=cortex-a73.cortex-a53 -mtune=cortex-a73.cortex-a53
+else ifeq ($(cc-name),clang)
+KBUILD_CFLAGS += -mcpu=cortex-a53 -mtune=cortex-a53
+KBUILD_AFLAGS += -mcpu=cortex-a53 -mtune=cortex-a53
 endif
 
 ifeq ($(cc-name),clang)
