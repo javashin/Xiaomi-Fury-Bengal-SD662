@@ -2024,7 +2024,7 @@ static int32_t nvt_ts_probe(struct spi_device *client)
       	  	goto err_get_regulator;
     	}
 
-    	ret = nvt_ts_enable_regulator(true);
+    	ret = nvt_ts_enable_regulator(false);//default disable regulator
     	if (ret < 0) {
      	  	NVT_LOG("Failed to enable regulator");
        	 	goto err_enable_regulator;
