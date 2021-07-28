@@ -1,10 +1,10 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/arm64 4.19.198 Kernel Configuration
+# Linux/arm64 4.19.199 Kernel Configuration
 #
 
 #
-# Compiler: aarch64-unknown-linux-gnu-gcc (MoonBase-Android-ToolChain) 12.0.0 20210722 (experimental)
+# Compiler: aarch64-unknown-linux-gnu-gcc (MoonBase-Android-ToolChain) 12.0.0 20210728 (experimental)
 #
 CONFIG_CC_IS_GCC=y
 CONFIG_GCC_VERSION=120000
@@ -1491,7 +1491,6 @@ CONFIG_DPDT_STATUS=y
 # CONFIG_QTI_XR_SMRTVWR_MISC is not set
 # CONFIG_QTI_MAXIM_FAN_CONTROLLER is not set
 CONFIG_FORCE_FAST_CHARGE=y
-CONFIG_BATTERY_SAVER=y
 # CONFIG_C2PORT is not set
 
 #
@@ -2012,7 +2011,6 @@ CONFIG_TOUCHSCREEN_NT36672A=y
 CONFIG_VITURALSAR=y
 CONFIG_TOUCHSCREEN_FT8719=y
 CONFIG_TOUCHSCREEN_XIAOMI_TOUCHFEATURE=y
-CONFIG_TOUCHSCREEN_COMMON=y
 CONFIG_INPUT_MISC=y
 # CONFIG_INPUT_AD714X is not set
 # CONFIG_INPUT_ATMEL_CAPTOUCH is not set
