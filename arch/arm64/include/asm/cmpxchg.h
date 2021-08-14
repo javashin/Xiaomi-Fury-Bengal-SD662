@@ -19,7 +19,6 @@
 #define __ASM_CMPXCHG_H
 
 #include <linux/build_bug.h>
-#include <linux/compiler.h>
 
 #include <asm/atomic.h>
 #include <asm/barrier.h>
