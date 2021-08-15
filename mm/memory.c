@@ -145,25 +145,6 @@ EXPORT_SYMBOL(zero_pfn);
 
 unsigned long highest_memmap_pfn __read_mostly;
 
-#ifdef CONFIG_UKSM
-unsigned long uksm_zero_pfn __read_mostly;
-EXPORT_SYMBOL_GPL(uksm_zero_pfn);
-struct page *empty_uksm_zero_page;
-
-static int __init setup_uksm_zero_page(void)
-{
-	empty_uksm_zero_page = alloc_pages(__GFP_ZERO & ~__GFP_MOVABLE, 0);
-	if (!empty_uksm_zero_page)
-		panic("Oh boy, that early out of memory?");
-
-	SetPageReserved(empty_uksm_zero_page);
-	uksm_zero_pfn = page_to_pfn(empty_uksm_zero_page);
-
-	return 0;
-}
-core_initcall(setup_uksm_zero_page);
-#endif
-
 /*
  * CONFIG_MMU architectures set up ZERO_PAGE in their paging_init()
  */
@@ -191,7 +172,6 @@ void mm_trace_rss_stat(struct mm_struct *mm, int member, long count,
 		trace_rss_stat(mm, member, count);
 }
 EXPORT_SYMBOL_GPL(mm_trace_rss_stat);
-
 
 #if defined(SPLIT_RSS_COUNTING)
 
@@ -1105,9 +1085,6 @@ copy_one_pte(struct mm_struct *dst_mm, struct mm_struct *src_mm,
 		get_page(page);
 		page_dup_rmap(page, false);
 		rss[mm_counter(page)]++;
-
-		/* Should return NULL in vm_normal_page() */
-		uksm_bugon_zeropage(pte);
 	} else if (pte_devmap(pte)) {
 		page = pte_page(pte);
 
@@ -1121,8 +1098,6 @@ copy_one_pte(struct mm_struct *dst_mm, struct mm_struct *src_mm,
 			page_dup_rmap(page, false);
 			rss[mm_counter(page)]++;
 		}
-	} else {
-		uksm_map_zero_page(pte);
 	}
 
 out_set_pte:
@@ -1395,10 +1370,8 @@ again:
 			ptent = ptep_get_and_clear_full(mm, addr, pte,
 							tlb->fullmm);
 			tlb_remove_tlb_entry(tlb, pte, addr);
-			if (unlikely(!page)) {
-				uksm_unmap_zero_page(ptent);
+			if (unlikely(!page))
 				continue;
-			}
 
 			if (!PageAnon(page)) {
 				if (pte_dirty(ptent)) {
@@ -2662,7 +2635,7 @@ pte_unlock:
 		pte_unmap_unlock(vmf->pte, vmf->ptl);
 	kunmap_atomic(kaddr);
 	flush_dcache_page(dst);
-		uksm_cow_page(vma, src);
+
 	return ret;
 }
 
@@ -2858,9 +2831,7 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
 						mm_counter_file(old_page));
 				inc_mm_counter_fast(mm, MM_ANONPAGES);
 			}
-			uksm_bugon_zeropage(vmf->orig_pte);
 		} else {
-			uksm_unmap_zero_page(vmf->orig_pte);
 			inc_mm_counter_fast(mm, MM_ANONPAGES);
 		}
 		flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
@@ -3587,7 +3558,7 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
 	page = alloc_zeroed_user_highpage_movable(vma, vmf->address);
 	if (!page)
 		goto oom;
-		uksm_cow_pte(vma, vmf->orig_pte);
+
 	if (mem_cgroup_try_charge_delay(page, vma->vm_mm, GFP_KERNEL, &memcg,
 					false))
 		goto oom_free_page;
