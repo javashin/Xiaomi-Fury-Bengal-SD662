@@ -7877,9 +7877,7 @@ unlock:
 	 * Pick the prev CPU, if best energy CPU can't saves at least 6% of
 	 * the energy used by prev_cpu.
 	 */
-	if (!(idle_cpu(best_energy_cpu) &&
-	    idle_get_state_idx(cpu_rq(best_energy_cpu)) <= 0) &&
-	    (prev_energy != ULONG_MAX) && (best_energy_cpu != prev_cpu) &&
+	if ((prev_energy != ULONG_MAX) && (best_energy_cpu != prev_cpu)  &&
 	    ((prev_energy - best_energy) <= prev_energy >> 4))
 		best_energy_cpu = prev_cpu;
 
