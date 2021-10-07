@@ -37,6 +37,7 @@ static u32 tcp_clamp_rto_to_user_timeout(const struct sock *sk)
 		return 1; /* user timeout has passed; fire ASAP */
 
 	return min_t(u32, icsk->icsk_rto, msecs_to_jiffies(remaining));
+
 }
 
 static void set_tcp_default(void)
