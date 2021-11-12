@@ -55,7 +55,7 @@ struct keyslot_manager;
  * Maximum number of blkcg policies allowed to be registered concurrently.
  * Defined here to simplify include dependency.
  */
-#define BLKCG_MAX_POLS		5
+#define BLKCG_MAX_POLS		7
 
 typedef void (rq_end_io_fn)(struct request *, blk_status_t);
 
@@ -130,6 +130,10 @@ typedef __u32 __bitwise req_flags_t;
 #define RQF_TIMED_OUT		((__force req_flags_t)(1 << 21))
 /* increased nr_pending for this request */
 #define RQF_PM_ADDED		((__force req_flags_t)(1 << 22))
+/* DEBUG: rq in bfq-mq dispatch list */
+#define RQF_DISP_LIST	((__force req_flags_t)(1 << 22))
+/* DEBUG: rq had get_rq_private executed on it */
+#define RQF_GOT	((__force req_flags_t)(1 << 23))
 
 /* flags that prevent us from merging requests: */
 #define RQF_NOMERGE_FLAGS \
@@ -710,12 +714,10 @@ struct request_queue {
 #define QUEUE_FLAG_SCSI_PASSTHROUGH 27	/* queue supports SCSI commands */
 #define QUEUE_FLAG_QUIESCED    28	/* queue has been quiesced */
 
-#define QUEUE_FLAG_DEFAULT	((1 << QUEUE_FLAG_IO_STAT) |		\
-				 (1 << QUEUE_FLAG_SAME_COMP)	|	\
+#define QUEUE_FLAG_DEFAULT	((1 << QUEUE_FLAG_SAME_COMP)	|	\
 				 (1 << QUEUE_FLAG_ADD_RANDOM))
 
-#define QUEUE_FLAG_MQ_DEFAULT	((1 << QUEUE_FLAG_IO_STAT) |		\
-				 (1 << QUEUE_FLAG_SAME_COMP)	|	\
+#define QUEUE_FLAG_MQ_DEFAULT	((1 << QUEUE_FLAG_SAME_COMP)	|	\
 				 (1 << QUEUE_FLAG_POLL))
 
 void blk_queue_flag_set(unsigned int flag, struct request_queue *q);
@@ -1289,29 +1291,6 @@ struct request_queue *blk_alloc_queue_node(gfp_t gfp_mask, int node_id,
 					   spinlock_t *lock);
 extern void blk_put_queue(struct request_queue *);
 extern void blk_set_queue_dying(struct request_queue *);
-
-/*
- * block layer runtime pm functions
- */
-#ifdef CONFIG_PM
-extern void blk_pm_runtime_init(struct request_queue *q, struct device *dev);
-extern int blk_pre_runtime_suspend(struct request_queue *q);
-extern void blk_post_runtime_suspend(struct request_queue *q, int err);
-extern void blk_pre_runtime_resume(struct request_queue *q);
-extern void blk_post_runtime_resume(struct request_queue *q, int err);
-extern void blk_set_runtime_active(struct request_queue *q);
-#else
-static inline void blk_pm_runtime_init(struct request_queue *q,
-	struct device *dev) {}
-static inline int blk_pre_runtime_suspend(struct request_queue *q)
-{
-	return -ENOSYS;
-}
-static inline void blk_post_runtime_suspend(struct request_queue *q, int err) {}
-static inline void blk_pre_runtime_resume(struct request_queue *q) {}
-static inline void blk_post_runtime_resume(struct request_queue *q, int err) {}
-static inline void blk_set_runtime_active(struct request_queue *q) {}
-#endif
 
 /*
  * blk_plug permits building a queue of related requests by holding the I/O
