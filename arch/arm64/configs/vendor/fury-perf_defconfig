@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/arm64 4.19.221 Kernel Configuration
+# Linux/arm64 4.19.223 Kernel Configuration
 #
 
 #
@@ -494,7 +494,6 @@ CONFIG_SCHEDUTIL_DOWN_RATE_LIMIT=20000
 #
 # CPU frequency scaling drivers
 #
-CONFIG_FINGERPRINT_BOOST=y
 # CONFIG_CPUFREQ_DT is not set
 # CONFIG_CPUFREQ_DUMMY is not set
 # CONFIG_ARM_BIG_LITTLE_CPUFREQ is not set
