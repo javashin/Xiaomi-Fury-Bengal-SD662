@@ -737,6 +737,7 @@ KBUILD_CFLAGS	+= -mllvm -polly \
                    -mllvm -polly-parallel -lgomp \
                    -mllvm -polly-omp-backend=LLVM \
                    -mllvm -polly-num-threads=0 \
+                   -mllvm -polly-scheduling=dynamic \
 		   -mllvm -polly-run-dce \
 		   -mllvm -polly-run-inliner \
 		   -mllvm -polly-ast-use-context \
