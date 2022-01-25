@@ -115,18 +115,3 @@ static const struct file_operations ram_console_file_ops = {
 	.llseek = seq_lseek,
 	.release = single_release,
 };
-
-static int __init ram_console_late_init(void)
-{
-	struct proc_dir_entry *entry;
-
-	entry = proc_create("last_kmsg", 0444, NULL, &ram_console_file_ops);
-	if (!entry) {
-		pr_err("ram_console: failed to create proc entry\n");
-
-		return 0;
-	}
-	return 0;
-}
-
-late_initcall(ram_console_late_init);
